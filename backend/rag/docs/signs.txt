@@ -1,0 +1,27 @@
+The twelve zodiac signs are the foundation of astrological interpretation. Each sign represents a specific archetype, energy pattern, and set of qualities. The signs are grouped by element (Fire, Earth, Air, Water) and modality (Cardinal, Fixed, Mutable).
+
+Aries (March 21 - April 19) is the first sign, a Cardinal Fire sign ruled by Mars. Aries represents initiation, courage, impulsiveness, and the pioneering spirit. Those with strong Aries energy are natural leaders who are bold, competitive, and independent. Their shadow side includes impatience, aggression, and selfishness.
+
+Taurus (April 20 - May 20) is the second sign, a Fixed Earth sign ruled by Venus. Taurus represents stability, sensuality, material security, and perseverance. Taureans are reliable, patient, and grounded, with a deep appreciation for beauty, comfort, and nature. Their challenges include stubbornness and resistance to change.
+
+Gemini (May 21 - June 20) is the third sign, a Mutable Air sign ruled by Mercury. Gemini represents communication, curiosity, adaptability, and intellectual exploration. Geminis are witty, versatile, and sociable, with a gift for language and connecting ideas. Their shadow includes inconsistency and superficiality.
+
+Cancer (June 21 - July 22) is the fourth sign, a Cardinal Water sign ruled by the Moon. Cancer represents nurturing, emotional depth, home, and family. Cancerians are intuitive, protective, and deeply caring, with strong ties to their roots and loved ones. Their challenges include moodiness and defensive behavior.
+
+Leo (July 23 - August 22) is the fifth sign, a Fixed Fire sign ruled by the Sun. Leo represents creativity, self-expression, leadership, and the joy of being. Leos are generous, warm-hearted, and charismatic, with a natural flair for drama and performance. Their shadow includes egotism and need for attention.
+
+Virgo (August 23 - September 22) is the sixth sign, a Mutable Earth sign ruled by Mercury. Virgo represents analysis, service, health, and perfection. Virgos are practical, detail-oriented, and helpful, with a gift for discernment and improvement. Their challenges include overcritical tendencies and anxiety.
+
+Libra (September 23 - October 22) is the seventh sign, a Cardinal Air sign ruled by Venus. Libra represents balance, harmony, relationships, and justice. Librans are diplomatic, charming, and fair-minded, with a strong aesthetic sense. Their shadow includes indecisiveness and people-pleasing.
+
+Scorpio (October 23 - November 21) is the eighth sign, a Fixed Water sign ruled by Pluto (traditional: Mars). Scorpio represents transformation, intensity, power, and emotional depth. Scorpios are passionate, resourceful, and magnetic, with extraordinary resilience. Their challenges include jealousy and secrecy.
+
+Sagittarius (November 22 - December 21) is the ninth sign, a Mutable Fire sign ruled by Jupiter. Sagittarius represents exploration, wisdom, freedom, and higher learning. Sagittarians are optimistic, adventurous, and philosophical, with a love for travel and truth-seeking. Their shadow includes restlessness and bluntness.
+
+Capricorn (December 22 - January 19) is the tenth sign, a Cardinal Earth sign ruled by Saturn. Capricorn represents ambition, discipline, authority, and long-term achievement. Capricorns are responsible, patient, and strategic, with a strong work ethic. Their challenges include pessimism and workaholism.
+
+Aquarius (January 20 - February 18) is the eleventh sign, a Fixed Air sign ruled by Uranus (traditional: Saturn). Aquarius represents innovation, humanitarianism, individuality, and intellectual freedom. Aquarians are progressive, inventive, and community-oriented. Their shadow includes detachment and rebelliousness.
+
+Pisces (February 19 - March 20) is the twelfth sign, a Mutable Water sign ruled by Neptune (traditional: Jupiter). Pisces represents compassion, imagination, spirituality, and transcendence. Pisceans are empathetic, artistic, and deeply intuitive, with a connection to the collective unconscious. Their challenges include escapism and martyrdom.
+
+Each sign also has a polarity: Yang (masculine, extrovert, active) signs are Aries, Gemini, Leo, Libra, Sagittarius, Aquarius. Yin (feminine, introvert, receptive) signs are Taurus, Cancer, Virgo, Scorpio, Capricorn, Pisces.

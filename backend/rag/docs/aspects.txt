@@ -1,0 +1,19 @@
+Aspects are the angular relationships between planets in a birth chart. They reveal how different parts of your personality interact, creating harmony or tension. Aspects are measured by the degrees of separation between two planets, with an allowed orb of influence.
+
+Conjunction (0 degrees, orb ±8 degrees) is the most powerful aspect. When two planets are conjunct, their energies fuse and operate together. This can create tremendous focus and strength, or it can create intensity if the planets are of different natures. A conjunction to the Sun or Moon is especially significant. Conjunctions are considered major aspects and are usually given the widest orb.
+
+Opposition (180 degrees, orb ±8 degrees) creates tension and awareness through polarity. Two planets in opposition represent opposing needs that must be balanced. This aspect often manifests in relationships, as we project one side of the opposition onto others. The goal of an opposition is integration and conscious awareness of both sides.
+
+Trine (120 degrees, orb ±6 degrees) is a harmonious aspect that brings flow and ease. Planets in trine support each other naturally, creating talents and abilities that come effortlessly. Trines indicate areas of natural gift and grace, though too many trines without challenging aspects can lead to complacency.
+
+Square (90 degrees, orb ±6 degrees) creates friction, challenge, and motivation. Squares represent internal conflicts that drive growth through action. While uncomfortable, squares are the most motivating aspects in the chart, pushing us to develop strength and overcome obstacles. The tension of a square demands resolution.
+
+Sextile (60 degrees, orb ±4 degrees) is a harmonious aspect that offers opportunity. Planets in sextile work together cooperatively, but unlike the trine, sextiles require conscious effort to activate. Sextiles represent potential talents and opportunities that need cultivation.
+
+Minor aspects include the quincunx (150 degrees), semi-sextile (30 degrees), semi-square (45 degrees), and sesquiquadrate (135 degrees). These aspects add nuance and subtlety to chart interpretation. The quincunx, in particular, indicates areas requiring adjustment and integration.
+
+Applying aspects are those where the faster planet is approaching the exact aspect with the slower planet. Separating aspects are where the faster planet has already made the exact aspect. Applying aspects are considered more powerful and fated.
+
+Orbs are generally wider for the Sun and Moon (up to 10-12 degrees for conjunctions) and tighter for outer planets and minor aspects. In synastry (relationship astrology), orbs of 8 degrees for major aspects and 3-4 degrees for minor aspects are standard.
+
+Aspect patterns add another layer of interpretation. The Grand Trine (three planets in trine forming a triangle) indicates natural talent and ease. The T-Square (two planets in opposition, both square a third) creates driving tension. The Yod (two quincunxes forming a finger of God pattern) indicates fated purpose.

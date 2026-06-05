@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.venv/
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+.pyre/
+.mypy_cache/
+.dmypy.json
+.pytype/
+profile_default/
+ipython_config.py
+jupyter_notebook_config.py
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
+build/
+dist/
+eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+*.whl
+pip-wheel-metadata/
+share/python-wheels/
+
+# Logs and runtime files
+*.log
+local_settings.py
+instance/
+.webassets-cache
+
+# Database
+*.sqlite3
+*.db
+astroagent.db
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
