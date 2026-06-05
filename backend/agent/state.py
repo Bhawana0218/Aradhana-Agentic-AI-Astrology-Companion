@@ -12,3 +12,4 @@ class AgentState(TypedDict):
     tool_outputs: list[dict]
     session_id: str
     step_count: int
+    language: str

@@ -125,8 +125,176 @@ export interface LanguageOption {
 
 export type Theme = 'cosmic' | 'mystic' | 'celestial';
 
+export type AIPersona = 'wise' | 'poetic' | 'direct' | 'nurturing';
+
 export interface SuggestedPrompt {
   icon: string;
   text: string;
   category: 'chart' | 'transit' | 'question';
+}
+
+// ─────────────────────────────────────────────
+// Daily Guidance
+// ─────────────────────────────────────────────
+
+export interface DailyGuidance {
+  date: string;
+  sun_sign: string;
+  moon_sign: string;
+  overall: GuidanceSection;
+  career: GuidanceSection;
+  relationships: GuidanceSection;
+  wellness: GuidanceSection;
+  lucky_number: number;
+  lucky_color: string;
+  affirmation: string;
+  mantra: string;
+  moon_phase?: { phase: string; illumination_pct: number };
+}
+
+export interface GuidanceSection {
+  rating: number; // 1-5
+  summary: string;
+  detail: string;
+}
+
+// ─────────────────────────────────────────────
+// Journal
+// ─────────────────────────────────────────────
+
+export type Mood = 'cosmic' | 'radiant' | 'calm' | 'stormy' | 'neutral';
+export type JournalTag = 'reflection' | 'intention' | 'dream' | 'gratitude' | 'insight' | 'transit';
+
+export interface JournalEntry {
+  id: string;
+  title: string;
+  content: string;
+  mood: Mood;
+  tags: JournalTag[];
+  created_at: string;
+  updated_at: string;
+  ai_reflection?: string;
+  bookmarked: boolean;
+}
+
+// ─────────────────────────────────────────────
+// Reading History
+// ─────────────────────────────────────────────
+
+export interface ReadingSession {
+  id: string;
+  title: string;
+  preview: string;
+  created_at: string;
+  message_count: number;
+  bookmarked: boolean;
+  tags: string[];
+}
+
+// ─────────────────────────────────────────────
+// Profile
+// ─────────────────────────────────────────────
+
+export interface UserProfile {
+  name: string;
+  email?: string;
+  avatar?: string;
+  birth_details: BirthDetails | null;
+  preferences: UserPreferences;
+  joined_at: string;
+}
+
+export interface UserPreferences {
+  language: Language;
+  theme: Theme;
+  ai_persona: AIPersona;
+  notifications: boolean;
+  weekly_guidance: boolean;
+  retrograde_alerts: boolean;
+  eclipse_alerts: boolean;
+}
+
+// ─────────────────────────────────────────────
+// Cosmic Events
+// ─────────────────────────────────────────────
+
+export type EventType = 'retrograde' | 'eclipse' | 'moon_phase' | 'planetary_alignment' | 'solstice' | 'equinox' | 'meteor_shower';
+
+export interface CosmicEvent {
+  id: string;
+  type: EventType;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date?: string;
+  significance: number; // 1-5
+  planets_involved?: string[];
+  icon: string;
+}
+
+// ─────────────────────────────────────────────
+// Learning Hub
+// ─────────────────────────────────────────────
+
+export interface ZodiacSignDetail {
+  name: string;
+  symbol: string;
+  element: 'Fire' | 'Earth' | 'Air' | 'Water';
+  modality: 'Cardinal' | 'Fixed' | 'Mutable';
+  ruler: string;
+  house: number;
+  keywords: string[];
+  description: string;
+  strengths: string[];
+  weaknesses: string[];
+  color: string;
+}
+
+export interface HouseDetail {
+  number: number;
+  title: string;
+  keywords: string[];
+  description: string;
+  ruled_sign: string;
+}
+
+export interface PlanetDetail {
+  name: string;
+  symbol: string;
+  rules: string[];
+  description: string;
+  color: string;
+  speed: string;
+  retrograde_period: string;
+  keywords: string[];
+}
+
+export interface NakshatraDetail {
+  name: string;
+  number: number;
+  lord: string;
+  symbol: string;
+  deity: string;
+  description: string;
+  range: string;
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+  category: string;
+}
+
+// ─────────────────────────────────────────────
+// Notification / Toast
+// ─────────────────────────────────────────────
+
+export type ToastType = 'success' | 'error' | 'info' | 'warning';
+
+export interface Toast {
+  id: string;
+  type: ToastType;
+  title: string;
+  message?: string;
+  duration?: number;
 }

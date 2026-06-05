@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, Check } from 'lucide-react';
 import { useChatStore } from '../store/chatStore';
+import { useTranslation } from '../i18n';
 import type { Language, LanguageOption } from '../types';
 
 const LANGUAGES: LanguageOption[] = [
@@ -18,6 +19,7 @@ const LANGUAGES: LanguageOption[] = [
 ];
 
 export function LanguageSelector() {
+  const { t } = useTranslation();
   const { language, setLanguage } = useChatStore();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

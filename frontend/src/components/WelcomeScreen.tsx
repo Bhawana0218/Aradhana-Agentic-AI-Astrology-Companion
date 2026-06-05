@@ -1,39 +1,7 @@
 import { motion } from 'framer-motion';
-import { Sparkles, Star, Moon, Sun, Zap } from 'lucide-react';
+import { Sparkles, Star, Moon, Sun } from 'lucide-react';
 import type { SuggestedPrompt } from '../types';
-
-const SUGGESTED_PROMPTS: SuggestedPrompt[] = [
-  {
-    icon: '✨',
-    text: 'What does my birth chart reveal?',
-    category: 'chart',
-  },
-  {
-    icon: '🌙',
-    text: "What energy is today's Moon bringing?",
-    category: 'transit',
-  },
-  {
-    icon: '♄',
-    text: "I'm 29 — what is my Saturn Return?",
-    category: 'question',
-  },
-  {
-    icon: '💫',
-    text: 'How do Venus and Mars affect love?',
-    category: 'question',
-  },
-  {
-    icon: '☿',
-    text: 'Is Mercury retrograde right now?',
-    category: 'transit',
-  },
-  {
-    icon: '🔮',
-    text: 'What are my North Node lessons?',
-    category: 'question',
-  },
-];
+import { useTranslation } from '../i18n';
 
 const ZODIAC_SYMBOLS = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
 
@@ -42,6 +10,17 @@ interface Props {
 }
 
 export function WelcomeScreen({ onPromptClick }: Props) {
+  const { t } = useTranslation();
+
+  const SUGGESTED_PROMPTS: SuggestedPrompt[] = [
+    { icon: '✨', text: t('welcomeScreen.promptChartTitle'), category: 'chart' },
+    { icon: '🌙', text: t('welcomeScreen.promptTodayTitle'), category: 'transit' },
+    { icon: '♄', text: t('welcomeScreen.promptSaturnTitle'), category: 'question' },
+    { icon: '💫', text: t('welcomeScreen.promptVenusMarsTitle'), category: 'question' },
+    { icon: '☿', text: t('welcomeScreen.promptMercuryTitle'), category: 'transit' },
+    { icon: '🔮', text: t('welcomeScreen.promptNorthNodeTitle'), category: 'question' },
+  ];
+
   return (
     <div className="flex flex-col items-center justify-center min-h-full py-8 px-4">
       {/* Zodiac ring decoration */}
@@ -110,10 +89,10 @@ export function WelcomeScreen({ onPromptClick }: Props) {
         className="text-center mb-3"
       >
         <h2 className="font-display text-3xl text-starlight tracking-wide text-glow-starlight mb-1">
-          Namaste, Seeker
+          {t('welcomeScreen.title')}
         </h2>
         <p className="font-serif text-lg italic text-starlight-dim/80">
-          नमस्ते — The light in me honors the light in you
+          {t('welcomeScreen.subtitle')}
         </p>
       </motion.div>
 
@@ -124,8 +103,7 @@ export function WelcomeScreen({ onPromptClick }: Props) {
         transition={{ delay: 0.35, duration: 0.6 }}
         className="text-center text-sm text-starlight-muted max-w-sm leading-relaxed mb-8"
       >
-        I am Aradhana — your celestial guide. Share your birth details to unlock
-        your natal chart, or ask me about the cosmic currents shaping your journey.
+        {t('welcomeScreen.hint')}
       </motion.p>
 
       {/* Zodiac strip */}
@@ -160,7 +138,7 @@ export function WelcomeScreen({ onPromptClick }: Props) {
         className="w-full max-w-lg"
       >
         <p className="text-center text-xs text-starlight-muted/50 uppercase tracking-widest mb-3 font-medium">
-          Begin your journey
+          {t('welcomeScreen.getStarted')}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {SUGGESTED_PROMPTS.map((prompt, i) => (
@@ -190,8 +168,7 @@ export function WelcomeScreen({ onPromptClick }: Props) {
         transition={{ delay: 1.2 }}
         className="mt-8 text-[10px] text-center text-starlight-muted/40 max-w-xs leading-relaxed"
       >
-        Astrology is for self-reflection and guidance only. Not a substitute for
-        professional medical, legal, or financial advice.
+        {t('welcomeScreen.disclaimer')}
       </motion.p>
     </div>
   );

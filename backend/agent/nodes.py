@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+from datetime import datetime
 
 from pathlib import Path
 
@@ -133,17 +134,39 @@ def router_node(state: AgentState) -> AgentState:
     return state
 
 
+LANGUAGE_NAMES = {
+    "en": "English", "hi": "Hindi", "bn": "Bengali", "te": "Telugu",
+    "mr": "Marathi", "ta": "Tamil", "gu": "Gujarati", "kn": "Kannada",
+    "ml": "Malayalam", "pa": "Punjabi",
+}
+
 def reasoner_node(state: AgentState) -> AgentState:
     step_count = state.get("step_count", 0)
     step_budget = int(os.getenv("MAX_AGENT_STEPS", "8"))
+    today_date = datetime.now().strftime("%Y-%m-%d")
+    language = state.get("language", "en")
+    lang_name = LANGUAGE_NAMES.get(language, "English")
 
     astrologer_prompt = (
         "You are Aradhana, a warm, calm, spiritually grounded astrologer. "
         "You speak with gentle wisdom and cosmic insight. "
         "You may never present astrological readings as medical, financial, legal, or predictive certainty. "
         "Always remind users that astrology is for self-reflection and guidance only.\n\n"
+        f"Today's date is {today_date}. Use this when calling tools that need a date.\n"
         f"Step budget: {step_count}/{step_budget} steps used.\n"
     )
+
+    if language != "en":
+        astrologer_prompt += f"\nThe user prefers communication in {lang_name}. Please respond entirely in {lang_name}.\n"
+
+    bd = state.get("birth_details")
+    if bd:
+        astrologer_prompt += "\nThe user has already provided their birth details via the form. Do NOT ask for them again:\n"
+        if bd.get("name"): astrologer_prompt += f"  Name: {bd['name']}\n"
+        if bd.get("date"): astrologer_prompt += f"  Date of Birth: {bd['date']}\n"
+        if bd.get("time"): astrologer_prompt += f"  Time of Birth: {bd['time']}\n"
+        if bd.get("place"): astrologer_prompt += f"  Place of Birth: {bd['place']}\n"
+        astrologer_prompt += "\nCompute the chart directly — no need to ask for details again.\n"
 
     if state.get("natal_chart"):
         astrologer_prompt += f"\nCurrent natal chart:\n{json.dumps(state['natal_chart'], indent=2)}\n"
@@ -177,8 +200,8 @@ def reasoner_node(state: AgentState) -> AgentState:
     except Exception as e:
         logger.exception("Reasoner failed")
         state["messages"].append(AIMessage(
-            content="I'm sorry, I encountered a momentary cosmic disruption. "
-                    "Could you please try again? The stars are waiting."
+            content=f"I'm sorry, I encountered an issue connecting to my inner wisdom. "
+                    f"Please try again. (Error: {type(e).__name__})"
         ))
 
     return state
@@ -188,4 +211,8 @@ def respond_node(state: AgentState) -> AgentState:
     last_msg = state["messages"][-1] if state["messages"] else None
     if last_msg and hasattr(last_msg, "content") and isinstance(last_msg, AIMessage):
         last_msg.content = safety_check(last_msg.content)
+    if not last_msg or not last_msg.content:
+        state["messages"].append(AIMessage(
+            content="I sense the cosmic energies are shifting. Could you ask your question again?"
+        ))
     return state

@@ -2,6 +2,11 @@ import { useCallback } from 'react';
 import { useChatStore } from '../store/chatStore';
 import type { BirthDetails, SSEEvent } from '../types';
 
+const uuid = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+  const r = (Math.random() * 16) | 0;
+  return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+});
+
 const API_BASE = '/api';
 
 export function useChat() {
@@ -40,7 +45,7 @@ export function useChat() {
 
       // Add user message immediately
       addMessage({
-        id: crypto.randomUUID(),
+        id: uuid(),
         role: 'user',
         content: message,
         created_at: new Date().toISOString(),
@@ -51,7 +56,7 @@ export function useChat() {
       setToolActivity(null);
 
       // Create empty assistant message for streaming into
-      const assistantId = crypto.randomUUID();
+      const assistantId = uuid();
       addMessage({
         id: assistantId,
         role: 'assistant',
@@ -70,6 +75,7 @@ export function useChat() {
             session_id: sid,
             message,
             birth_details: bd ?? undefined,
+            language: useChatStore.getState().language,
           }),
         });
 

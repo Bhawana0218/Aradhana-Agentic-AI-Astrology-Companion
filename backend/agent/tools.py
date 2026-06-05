@@ -158,10 +158,49 @@ def compute_birth_chart(date: str, time: str, lat: float, lon: float, timezone_s
         return {"error": str(e)}
 
 
+MOON_PHASES = [
+    ("New Moon", 0, 45),
+    ("Waxing Crescent", 45, 90),
+    ("First Quarter", 90, 135),
+    ("Waxing Gibbous", 135, 180),
+    ("Full Moon", 180, 225),
+    ("Waning Gibbous", 225, 270),
+    ("Last Quarter", 270, 315),
+    ("Waning Crescent", 315, 360),
+]
+
+
+def _compute_moon_phase(date_str: str) -> dict:
+    year, month, day = map(int, date_str.split("-"))
+    obs = ephem.Observer()
+    obs.date = f"{year}/{month}/{day} 12:00:00"
+    moon = ephem.Moon()
+    sun = ephem.Sun()
+    moon.compute(obs)
+    sun.compute(obs)
+    sun_lon = math.degrees(float(ephem.Ecliptic(sun).lon))
+    moon_lon = math.degrees(float(ephem.Ecliptic(moon).lon))
+    diff = (moon_lon - sun_lon) % 360
+    phase_name = "Unknown"
+    for name, start, end in MOON_PHASES:
+        if start <= diff < end:
+            phase_name = name
+            break
+    illumination = float(moon.moon_phase) * 100
+    return {
+        "phase": phase_name,
+        "illumination_pct": round(illumination, 1),
+        "sun_moon_angle": round(diff, 1),
+    }
+
+
 @tool
-def get_daily_transits(date: str, natal_chart: dict) -> dict:
-    """Compute transiting planetary positions and aspects to the natal chart for a given date."""
+def get_daily_transits(date: str = "", natal_chart: dict | None = None) -> dict:
+    """Get current planetary positions, Moon phase, and aspects to your natal chart. Use this for any question about today's transits, Moon energy, planetary movements, or daily horoscope. Leave date empty for today."""
     try:
+        if not date or date.lower() == "today":
+            from datetime import datetime as dt
+            date = dt.now().strftime("%Y-%m-%d")
         year, month, day = map(int, date.split("-"))
 
         observer = ephem.Observer()
@@ -170,46 +209,42 @@ def get_daily_transits(date: str, natal_chart: dict) -> dict:
         observer.date = f"{year}/{month}/{day} 12:00:00"
 
         transiting_planets = _compute_planets(observer)
+        moon_phase = _compute_moon_phase(date)
 
         aspects_to_natal = []
-        natal_planets = {p["name"]: p["longitude"] for p in natal_chart.get("planets", [])}
-        aspect_defs = [
-            ("conjunction", 8.0),
-            ("opposition", 8.0),
-            ("trine", 6.0),
-            ("square", 6.0),
-            ("sextile", 4.0),
-        ]
-
-        target_angles = {
-            "conjunction": [0],
-            "opposition": [180],
-            "trine": [120],
-            "square": [90],
-            "sextile": [60],
-        }
-
-        for tp in transiting_planets:
-            for natal_name, natal_lon in natal_planets.items():
-                diff = abs(tp["longitude"] - natal_lon)
-                diff = min(diff, 360 - diff)
-                for aspect_name, orb in aspect_defs:
-                    for target in target_angles[aspect_name]:
-                        if abs(diff - target) <= orb:
-                            aspects_to_natal.append({
-                                "transiting_planet": tp["name"],
-                                "natal_planet": natal_name,
-                                "aspect": aspect_name,
-                                "orb": round(abs(diff - target), 2),
-                                "exact": round(diff, 2),
-                            })
-
-        aspects_to_natal.sort(key=lambda x: x["orb"])
-        if len(aspects_to_natal) > 20:
+        if natal_chart and natal_chart.get("planets"):
+            natal_planets = {p["name"]: p["longitude"] for p in natal_chart["planets"]}
+            aspect_defs = [
+                ("conjunction", 8.0),
+                ("opposition", 8.0),
+                ("trine", 6.0),
+                ("square", 6.0),
+                ("sextile", 4.0),
+            ]
+            target_angles = {
+                "conjunction": [0], "opposition": [180],
+                "trine": [120], "square": [90], "sextile": [60],
+            }
+            for tp in transiting_planets:
+                for natal_name, natal_lon in natal_planets.items():
+                    diff = abs(tp["longitude"] - natal_lon)
+                    diff = min(diff, 360 - diff)
+                    for aspect_name, orb in aspect_defs:
+                        for target in target_angles[aspect_name]:
+                            if abs(diff - target) <= orb:
+                                aspects_to_natal.append({
+                                    "transiting_planet": tp["name"],
+                                    "natal_planet": natal_name,
+                                    "aspect": aspect_name,
+                                    "orb": round(abs(diff - target), 2),
+                                    "exact": round(diff, 2),
+                                })
+            aspects_to_natal.sort(key=lambda x: x["orb"])
             aspects_to_natal = aspects_to_natal[:20]
 
         return {
             "transiting_planets": transiting_planets,
+            "moon_phase": moon_phase,
             "aspects_to_natal": aspects_to_natal,
             "date": date,
         }

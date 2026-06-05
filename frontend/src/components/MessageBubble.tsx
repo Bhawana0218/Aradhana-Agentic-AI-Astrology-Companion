@@ -49,7 +49,7 @@ export function MessageBubble({ message, isLast }: Props) {
     <motion.div
       initial={{ opacity: 0, y: 14, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className={clsx(
         'group flex gap-3 px-2 py-0.5',
         isUser ? 'flex-row-reverse' : 'flex-row'
@@ -58,14 +58,19 @@ export function MessageBubble({ message, isLast }: Props) {
       {/* Avatar */}
       <div className="flex-shrink-0 mt-1">
         {isUser ? (
-          <div className="w-8 h-8 rounded-full bg-sol-glow border border-sol/25 flex items-center justify-center shadow-sol-sm">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-sol/20 to-sol/5 border border-sol/25 flex items-center justify-center shadow-sm">
             <User className="w-4 h-4 text-sol-light" />
           </div>
         ) : (
-          <div className="w-8 h-8 rounded-full bg-aurora-glow border border-aurora/25 flex items-center justify-center relative shadow-aurora-sm">
-            <Sparkles className="w-4 h-4 text-aurora-light" />
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-aurora/20 to-mystic/10 border border-aurora/25 flex items-center justify-center relative shadow-sm">
+            <motion.div
+              animate={{ scale: [1, 1.08, 1], opacity: [0.8, 1, 0.8] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <Sparkles className="w-4 h-4 text-aurora-light" />
+            </motion.div>
             {message.isStreaming && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-teal border border-space animate-pulse" />
+              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-teal border-2 border-space animate-pulse shadow-sm shadow-teal/40" />
             )}
           </div>
         )}
@@ -75,27 +80,31 @@ export function MessageBubble({ message, isLast }: Props) {
       <div className={clsx('flex flex-col gap-1.5', isUser ? 'items-end' : 'items-start', 'max-w-[82%] md:max-w-[75%]')}>
         {/* Tool activity badges (only for assistant) */}
         {!isUser && message.tool_activity && message.tool_activity.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-0.5">
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-wrap gap-1.5 mb-0.5"
+          >
             {message.tool_activity.map((ta, i) => (
               <ToolActivityBadge key={i} activity={ta} />
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Message content */}
         <div
           className={clsx(
-            'relative rounded-2xl px-4 py-3 text-sm leading-relaxed',
+            'relative rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm',
             isUser
               ? 'bg-message-user border border-sol/15 text-starlight rounded-tr-sm'
-              : 'bg-message-ai border border-aurora/12 text-starlight/90 rounded-tl-sm glass-card'
+              : 'bg-message-ai border border-aurora/12 text-starlight/90 rounded-tl-sm'
           )}
         >
           {/* Copy button (assistant only, non-empty) */}
           {!isUser && message.content && !message.isStreaming && (
             <button
               onClick={handleCopy}
-              className="absolute top-2 right-2 p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-aurora/15"
+              className="absolute top-2 right-2 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-aurora/15 hover:scale-110"
               aria-label="Copy message"
             >
               {copied ? (
