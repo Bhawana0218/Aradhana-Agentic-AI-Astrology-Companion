@@ -14,7 +14,7 @@ export function Layout() {
       <div className="relative z-10 flex flex-col min-h-dvh">
         <Navbar />
         <main className="flex-1">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             <motion.div
               key={location.pathname}
               initial={{ opacity: 0, y: 12 }}
