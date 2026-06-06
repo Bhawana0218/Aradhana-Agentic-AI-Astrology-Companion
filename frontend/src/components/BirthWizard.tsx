@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Check, ChevronRight, ChevronLeft, MapPin, Calendar, Clock, User, Star, Globe, Loader2 } from 'lucide-react';
+import { Sparkles, Check, ChevronRight, ChevronLeft, MapPin, Calendar, Clock, User, Star, Globe } from 'lucide-react';
 import { useChatStore } from '../store/chatStore';
-import { geocodePlace } from '../lib/api';
+import { resolvePlace } from '../lib/geocode';
 import { useTranslation } from '../i18n';
 import clsx from 'clsx';
 
@@ -210,36 +210,20 @@ function PlaceStep({ onNext, onBack, defaultValues }: StepProps) {
   const { t } = useTranslation();
   const [place, setPlace] = useState(defaultValues?.place ?? '');
   const [touched, setTouched] = useState(false);
-  const [geoWarn, setGeoWarn] = useState<string | null>(null);
-  const [geocoding, setGeocoding] = useState(false);
-  const valid = place.trim().length >= 2 && !geocoding;
+  const valid = place.trim().length >= 2;
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(() => {
     if (!valid) return;
-    setGeocoding(true);
-    setGeoWarn(null);
-    try {
-      const result = await geocodePlace(place.trim());
-      if (result.error) {
-        setGeoWarn('Could not verify this location. You can still proceed.');
+    onNext({ place: place.trim(), lat: '', lon: '', timezone: '' });
+    resolvePlace(place.trim()).then((result) => {
+      if (result.lat) {
+        const { setBirthDetails } = useChatStore.getState();
+        const current = useChatStore.getState().birthDetails;
+        if (current && current.place === place.trim()) {
+          setBirthDetails({ ...current, lat: result.lat, lon: result.lon, timezone: result.timezone });
+        }
       }
-      onNext({
-        place: result.place ?? place.trim(),
-        lat: String(result.lat ?? ''),
-        lon: String(result.lon ?? ''),
-        timezone: result.timezone ?? '',
-      });
-    } catch {
-      setGeoWarn('Location verification unavailable. You can still proceed.');
-      onNext({
-        place: place.trim(),
-        lat: '',
-        lon: '',
-        timezone: '',
-      });
-    } finally {
-      setGeocoding(false);
-    }
+    });
   }, [place, valid, onNext]);
 
   return (
@@ -262,23 +246,17 @@ function PlaceStep({ onNext, onBack, defaultValues }: StepProps) {
         <input
           type="text"
           value={place}
-          onChange={(e) => { setPlace(e.target.value); setTouched(true); setGeoWarn(null); }}
+          onChange={(e) => { setPlace(e.target.value); setTouched(true); }}
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           placeholder={t('birthWizard.place.placeholder')}
           className="input-premium pl-10"
           autoFocus
           autoComplete="off"
         />
-        {geocoding && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-aurora animate-spin" />}
       </div>
-      {touched && !valid && !geoWarn && (
+      {touched && !valid && (
         <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-rose-cosmos/80">
           {t('birthWizard.place.error')}
-        </motion.p>
-      )}
-      {geoWarn && (
-        <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-amber-400/80">
-          {geoWarn}
         </motion.p>
       )}
       <div className="flex gap-2">
@@ -294,11 +272,7 @@ function PlaceStep({ onNext, onBack, defaultValues }: StepProps) {
             valid ? 'btn-gradient' : 'opacity-30 cursor-not-allowed bg-space/50 border border-starlight/10 text-starlight-muted'
           )}
         >
-          {geocoding ? (
-            <>{t('birthWizard.verifying')} <Loader2 className="w-4 h-4 animate-spin" /></>
-          ) : (
-            <>{t('birthWizard.next')} <ChevronRight className="w-4 h-4" /></>
-          )}
+          {t('birthWizard.next')} <ChevronRight className="w-4 h-4" />
         </motion.button>
       </div>
     </motion.div>
