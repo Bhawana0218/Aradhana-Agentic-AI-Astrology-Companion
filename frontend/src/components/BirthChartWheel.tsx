@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import type { PlanetData, HouseData, ChartPoint } from '../types';
 
 const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
@@ -41,7 +41,7 @@ interface Props {
   midheaven: ChartPoint;
 }
 
-export function BirthChartWheel({ planets, houses, ascendant }: Props) {
+export const BirthChartWheel = memo(function BirthChartWheel({ planets, houses, ascendant }: Props) {
   const cx = 200, cy = 200, r = 170, innerR = 50;
 
   const segments = useMemo(() => {
@@ -263,4 +263,4 @@ export function BirthChartWheel({ planets, houses, ascendant }: Props) {
       })}
     </svg>
   );
-}
+});

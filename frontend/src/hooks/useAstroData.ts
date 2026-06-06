@@ -1,8 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useChatStore } from '../store/chatStore';
 import type { BirthChart } from '../types';
+import { computeChart, getTransits } from '../lib/api';
+import { getCache, setCache } from '../lib/cache';
 
-const API_BASE = '/api';
+const CHART_CACHE_PREFIX = 'chart_';
+const TRANSITS_CACHE_KEY = 'transits';
+
+function birthHash(bd: Record<string, unknown>): string {
+  return `${bd.date}|${bd.time || '12:00'}|${bd.place}|${bd.lat ?? ''}|${bd.lon ?? ''}|${bd.timezone ?? ''}`;
+}
 
 export function useChart() {
   const { birthDetails } = useChatStore();
@@ -12,26 +19,26 @@ export function useChart() {
 
   const fetchChart = useCallback(async () => {
     if (!birthDetails?.date || !birthDetails?.place) return;
+    const hash = birthHash(birthDetails as Record<string, unknown>);
+    const cached = getCache<BirthChart>(CHART_CACHE_PREFIX + hash);
+    if (cached) {
+      setChart(cached);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/chart`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          date: birthDetails.date,
-          time: birthDetails.time || '12:00',
-          place: birthDetails.place,
-          lat: birthDetails.lat ?? null,
-          lon: birthDetails.lon ?? null,
-          timezone: birthDetails.timezone ?? null,
-        }),
+      const data = await computeChart({
+        date: birthDetails.date,
+        time: birthDetails.time || '12:00',
+        place: birthDetails.place,
+        lat: birthDetails.lat ?? null,
+        lon: birthDetails.lon ?? null,
+        timezone: birthDetails.timezone ?? null,
       });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || 'Chart computation failed');
-      }
-      setChart(await res.json());
+      const chartData = data as unknown as BirthChart;
+      setCache(CHART_CACHE_PREFIX + hash, chartData);
+      setChart(chartData);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load chart');
     } finally {
@@ -53,23 +60,24 @@ export function useTransits() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchTransits = useCallback(async () => {
+    const today = new Date().toISOString().split('T')[0];
+    const cacheKey = TRANSITS_CACHE_KEY + '_' + today;
+    const cached = getCache<object>(cacheKey);
+    if (cached) {
+      setTransits(cached);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      const body: Record<string, unknown> = {};
+      const body: { date?: string; lat?: number; lon?: number; timezone?: string } = {};
       if (birthDetails?.lat) body.lat = birthDetails.lat;
       if (birthDetails?.lon) body.lon = birthDetails.lon;
       if (birthDetails?.timezone) body.timezone = birthDetails.timezone;
-      const res = await fetch(`${API_BASE}/transits`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || 'Transits fetch failed');
-      }
-      setTransits(await res.json());
+      const data = await getTransits(body);
+      const result = data as object;
+      setCache(cacheKey, result, 21600000);
+      setTransits(result);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load transits');
     } finally {

@@ -10,6 +10,7 @@ from langchain_core.tools import tool
 from timezonefinder import TimezoneFinder
 
 from rag.retriever import load_retriever
+from .cache import cached, _make_key, get, set as cache_set, is_expired
 
 logger = logging.getLogger(__name__)
 
@@ -49,11 +50,15 @@ def _compute_planets(observer: ephem.Observer) -> list[dict]:
             ecl = ephem.Ecliptic(body)
             lon_deg = math.degrees(float(ecl.lon))
             sign_name, deg_in_sign = _degree_to_sign(lon_deg)
+            retrograde = body.ra < 0 if hasattr(body, 'ra') else False
+            speed = round(float(getattr(body, 'ra_speed', 0)), 4)
             results.append({
                 "name": name,
                 "longitude": round(lon_deg, 2),
                 "sign": sign_name,
                 "degree": deg_in_sign,
+                "retrograde": bool(getattr(body, 'ra_speed', 0) < 0) if hasattr(body, 'ra_speed') else False,
+                "speed": round(abs(float(getattr(body, 'ra_speed', 0))), 4),
             })
         except Exception as e:
             logger.warning(f"Failed to compute {name}: {e}")
@@ -130,6 +135,11 @@ def geocode_place(place_name: str) -> dict:
 @tool
 def compute_birth_chart(date: str, time: str, lat: float, lon: float, timezone_str: str) -> dict:
     """Compute the full natal birth chart: planets positions, houses, ascendant, and midheaven."""
+    cache_key = _make_key("chart", date, time, lat, lon, timezone_str)
+    if not is_expired(cache_key):
+        cached_val = get(cache_key)
+        if cached_val is not None:
+            return cached_val
     try:
         year, month, day = map(int, date.split("-"))
         hour, minute = map(int, time.split(":"))
@@ -147,12 +157,14 @@ def compute_birth_chart(date: str, time: str, lat: float, lon: float, timezone_s
         planets = _compute_planets(observer)
         houses, ascendant, midheaven = _compute_houses(jd, lat, lon)
 
-        return {
+        result = {
             "planets": planets,
             "houses": houses,
             "ascendant": ascendant,
             "midheaven": midheaven,
         }
+        cache_set(cache_key, result, ttl_seconds=0)
+        return result
     except Exception as e:
         logger.exception("Birth chart computation failed")
         return {"error": str(e)}
@@ -196,11 +208,16 @@ def _compute_moon_phase(date_str: str) -> dict:
 
 @tool
 def get_daily_transits(date: str = "", natal_chart: dict | None = None) -> dict:
-    """Get current planetary positions, Moon phase, and aspects to your natal chart. Use this for any question about today's transits, Moon energy, planetary movements, or daily horoscope. Leave date empty for today."""
+    """Get current planetary positions, Moon phase, and aspects to your natal chart."""
     try:
         if not date or date.lower() == "today":
             from datetime import datetime as dt
             date = dt.now().strftime("%Y-%m-%d")
+        cache_key = _make_key("transits", date)
+        if natal_chart is None and not is_expired(cache_key):
+            cached_val = get(cache_key)
+            if cached_val is not None:
+                return cached_val
         year, month, day = map(int, date.split("-"))
 
         observer = ephem.Observer()
@@ -242,12 +259,15 @@ def get_daily_transits(date: str = "", natal_chart: dict | None = None) -> dict:
             aspects_to_natal.sort(key=lambda x: x["orb"])
             aspects_to_natal = aspects_to_natal[:20]
 
-        return {
+        result = {
             "transiting_planets": transiting_planets,
             "moon_phase": moon_phase,
             "aspects_to_natal": aspects_to_natal,
             "date": date,
         }
+        if natal_chart is None:
+            cache_set(cache_key, result, ttl_seconds=21600)
+        return result
     except Exception as e:
         logger.exception("Transits computation failed")
         return {"error": str(e)}

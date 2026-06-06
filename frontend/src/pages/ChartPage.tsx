@@ -6,7 +6,7 @@ import { useChart } from '../hooks/useAstroData';
 import { useTranslation } from '../i18n';
 import { BirthChartWheel } from '../components/BirthChartWheel';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
-import { Sparkles, AlertTriangle, Compass } from 'lucide-react';
+import { Sparkles, AlertTriangle, Compass, RefreshCw, MapPin, Calendar, Clock, User } from 'lucide-react';
 
 const PLANET_SYMBOLS: Record<string, string> = {
   Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
@@ -21,7 +21,7 @@ const PLANET_COLORS: Record<string, string> = {
 export function ChartPage() {
   const { t } = useTranslation();
   const { birthDetails, setShowBirthForm } = useChatStore();
-  const { chart, loading, error } = useChart();
+  const { chart, loading, error, refetch } = useChart();
   const [activePlanet, setActivePlanet] = useState<string | null>(null);
 
   if (!birthDetails?.date || !birthDetails?.place) {
@@ -57,8 +57,14 @@ export function ChartPage() {
   if (error || !chart) {
     return (
       <div className="px-4 py-20 text-center">
-        <AlertTriangle className="w-10 h-10 text-rose-cosmos mx-auto mb-4" />
-        <p className="text-sm text-rose-cosmos/80">{error || t('chart.errorDesc')}</p>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <AlertTriangle className="w-10 h-10 text-rose-cosmos mx-auto mb-4" />
+          <p className="text-sm text-rose-cosmos/80 mb-6">{error || t('chart.errorDesc')}</p>
+          <button onClick={refetch} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl btn-primary text-xs">
+            <RefreshCw className="w-3.5 h-3.5" />
+            Retry
+          </button>
+        </motion.div>
       </div>
     );
   }
@@ -68,14 +74,27 @@ export function ChartPage() {
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="text-center mb-8">
           <h1 className="font-display text-2xl text-starlight tracking-wider mb-2">{t('chart.title')}</h1>
-          <p className="text-sm text-starlight-muted">
-            {birthDetails.name || 'Seeker'} &middot; {birthDetails.place} &middot; {birthDetails.date}
-            {birthDetails.time && birthDetails.time !== '12:00' && <span> at {birthDetails.time}</span>}
-          </p>
+          <div className="flex items-center justify-center gap-4 flex-wrap text-xs text-starlight-muted">
+            {birthDetails.name && (
+              <span className="inline-flex items-center gap-1">
+                <User className="w-3 h-3 text-aurora/60" /> {birthDetails.name}
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-aurora/60" /> {birthDetails.place}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-aurora/60" /> {birthDetails.date}
+            </span>
+            {birthDetails.time && birthDetails.time !== '12:00' && (
+              <span className="inline-flex items-center gap-1">
+                <Clock className="w-3 h-3 text-aurora/60" /> {birthDetails.time}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-5 gap-6">
-          {/* Wheel */}
           <div className="lg:col-span-3">
             <div className="glass-card rounded-2xl p-4 border border-starlight/6">
               <BirthChartWheel
@@ -87,7 +106,6 @@ export function ChartPage() {
             </div>
           </div>
 
-          {/* Planet Table */}
           <div className="lg:col-span-2 space-y-4">
             <div className="glass-card rounded-2xl p-4 border border-starlight/6">
               <h3 className="font-display text-sm text-starlight tracking-wide mb-3 flex items-center gap-2">
@@ -128,7 +146,6 @@ export function ChartPage() {
               </div>
             </div>
 
-            {/* Houses */}
             <div className="glass-card rounded-2xl p-4 border border-starlight/6">
               <h3 className="font-display text-sm text-starlight tracking-wide mb-3">{t('chart.houses')}</h3>
               <div className="grid grid-cols-2 gap-1">
@@ -142,7 +159,6 @@ export function ChartPage() {
               </div>
             </div>
 
-            {/* Key Points */}
             <div className="glass-card rounded-2xl p-4 border border-starlight/6">
               <h3 className="font-display text-sm text-starlight tracking-wide mb-3">{t('chart.keyPoints')}</h3>
               <div className="space-y-2">

@@ -46,7 +46,7 @@ if _GROQ_API_KEY:
     _LLM_API_KEY = _GROQ_API_KEY
     _LLM_BASE_URL = "https://api.groq.com/openai/v1"
     # Groq model defaults — llama-3.3-70b-versatile supports tool calling
-    ROUTER_MODEL = os.getenv("ROUTER_MODEL", _DEFAULT_MODEL or "llama-3.3-70b-versatile")
+    ROUTER_MODEL = os.getenv("ROUTER_MODEL", _DEFAULT_MODEL or "llama-3.1-8b-instant")
     REASONER_MODEL = os.getenv("REASONER_MODEL", _DEFAULT_MODEL or "llama-3.3-70b-versatile")
 else:
     _LLM_API_KEY = _OPENAI_API_KEY

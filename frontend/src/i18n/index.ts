@@ -128,6 +128,7 @@ const en: Record<string, string> = {
   'chart.defaultName': 'Seeker',
   'chart.atTime': ' at ',
   'chart.computeError': 'Could not compute chart',
+  'chart.errorDesc': 'Something went wrong while computing your birth chart. Please try again.',
 
   // Chart Wheel
   'chartWheel.birthChart': '✦ BIRTH CHART ✦',
@@ -364,6 +365,23 @@ const en: Record<string, string> = {
   'tool.default.done': 'Done ✓',
   'tool.complete': 'Complete',
   'tool.processing': 'Processing…',
+  'toolActivity.geocodeLabel': 'Birth Location',
+  'toolActivity.geocodeRunning': 'Finding your place on Earth…',
+  'toolActivity.geocodeDone': 'Location found ✓',
+  'toolActivity.birthChartLabel': 'Birth Chart',
+  'toolActivity.birthChartRunning': 'Computing planetary positions…',
+  'toolActivity.birthChartDone': 'Chart computed ✓',
+  'toolActivity.transitsLabel': 'Daily Transits',
+  'toolActivity.transitsRunning': 'Reading the cosmic clock…',
+  'toolActivity.transitsDone': 'Transits ready ✓',
+  'toolActivity.knowledgeLabel': 'Astrology Knowledge',
+  'toolActivity.knowledgeRunning': 'Consulting ancient wisdom…',
+  'toolActivity.knowledgeDone': 'Knowledge retrieved ✓',
+  'toolActivity.defaultLabel': 'Tool',
+  'toolActivity.defaultRunning': 'Processing…',
+  'toolActivity.defaultDone': 'Done ✓',
+  'toolActivity.completed': 'Completed',
+  'toolActivity.processing': 'Processing…',
 
   // Dev Dashboard
   'devDashboard.title': 'Dev Dashboard',
