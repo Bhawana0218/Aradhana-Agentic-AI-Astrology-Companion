@@ -109,7 +109,7 @@ def geocode_place(place_name: str) -> dict:
     geopy.geocoders.options.default_user_agent = "astroagent-1.0"
     geolocator = Nominatim()
     try:
-        location = geolocator.geocode(place_name)
+        location = geolocator.geocode(place_name, timeout=5)
         if location is None:
             return {"error": f"Could not find location: {place_name}", "place": place_name}
         tf = TimezoneFinder()

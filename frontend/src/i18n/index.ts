@@ -278,6 +278,12 @@ const en: Record<string, string> = {
   'profile.dataPrivacy': 'Data & Privacy',
   'profile.dataPrivacyDesc': 'Your data is stored locally in your browser. You can export it anytime.',
   'profile.exportData': 'Export My Data',
+  'profile.saveDetails': 'Save Details',
+  'profile.dob': 'Date of Birth',
+  'profile.tob': 'Time of Birth',
+  'profile.pob': 'Place of Birth',
+  'profile.exportDesc': 'Export your personal data as a JSON file.',
+  'profile.downloadJson': 'Download JSON',
 
   // Settings
   'settings.title': 'Settings',

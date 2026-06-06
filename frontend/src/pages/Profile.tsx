@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { User, Sparkles, Calendar, MapPin, Clock, Mail, Download, Edit3, Save, Camera } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { useChatStore } from '../store/chatStore';
+import { useJournalStore } from '../store/journalStore';
+import { useHistoryStore } from '../store/historyStore';
 import { toast } from '../components/Toast';
 import { formatDate } from '../lib/utils';
 import { useTranslation } from '../i18n';
 
-const JOIN_DATE = 'May 15, 2026';
-
 export function Profile() {
   const { t } = useTranslation();
   const { birthDetails, setBirthDetails } = useChatStore();
+  const { entries } = useJournalStore();
+  const { sessions } = useHistoryStore();
+
+  const readingsCount = useMemo(() => sessions.length, [sessions]);
+  const journalCount = useMemo(() => entries.length, [entries]);
+  const sessionsCount = useMemo(() => sessions.length, [sessions]);
+
+  const joinDate = useMemo(() => {
+    const stored = localStorage.getItem('astroagent-join-date');
+    if (stored) return stored;
+    const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    localStorage.setItem('astroagent-join-date', date);
+    return date;
+  }, []);
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState(birthDetails?.name || '');
   const [editPlace, setEditPlace] = useState(birthDetails?.place || '');
@@ -61,15 +75,15 @@ export function Profile() {
           <h1 className="font-display text-2xl text-starlight tracking-wider mb-1">
             {birthDetails?.name || 'Cosmic Seeker'}
           </h1>
-          <p className="text-sm text-starlight-muted">{t('profile.joined')} {JOIN_DATE}</p>
+          <p className="text-sm text-starlight-muted">{t('profile.joined')} {joinDate}</p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-8">
           {[
-            { label: t('profile.statReadings'), value: '12', icon: Sparkles },
-            { label: t('profile.statJournal'), value: '8', icon: Calendar },
-            { label: t('profile.statSessions'), value: '6', icon: Clock },
+            { label: t('profile.statReadings'), value: String(readingsCount), icon: Sparkles },
+            { label: t('profile.statJournal'), value: String(journalCount), icon: Calendar },
+            { label: t('profile.statSessions'), value: String(sessionsCount), icon: Clock },
           ].map((stat) => (
             <div key={stat.label} className="glass-card rounded-2xl p-4 text-center border border-starlight/6">
               <stat.icon className="w-4 h-4 text-aurora-light mx-auto mb-1.5" />
@@ -142,7 +156,7 @@ export function Profile() {
           <h2 className="font-display text-sm text-starlight tracking-wide mb-4">{t('profile.account')}</h2>
           <div className="flex items-center gap-3 text-sm mb-4">
             <Mail className="w-4 h-4 text-starlight-muted" />
-            <span className="text-starlight-dim">seeker@cosmic.xyz</span>
+            <span className="text-starlight-dim">{birthDetails?.name?.toLowerCase().replace(/\s+/g, '.') || 'seeker'}@cosmic.xyz</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-aurora/8 text-aurora-dim border border-aurora/10">{t('profile.freePlan')}</span>

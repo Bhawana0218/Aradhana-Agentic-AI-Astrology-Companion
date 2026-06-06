@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="AstroAgent API", version="1.0.0")
 
-origins = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:4173").split(",")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
