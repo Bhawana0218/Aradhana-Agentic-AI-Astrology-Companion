@@ -7,7 +7,6 @@ import { useChat } from '../hooks/useChat';
 import { useSession } from '../hooks/useSession';
 import { useTranslation } from '../i18n';
 import { MessageBubble } from '../components/MessageBubble';
-import { StreamingIndicator } from '../components/StreamingIndicator';
 import { ErrorBanner } from '../components/ErrorBanner';
 import { BirthWizard } from '../components/BirthWizard';
 import { LiveToolActivityBadge, ToolTimeline } from '../components/ToolActivityBadge';
@@ -136,22 +135,7 @@ export function ChatPage() {
                 isLast={i === messages.length - 1}
               />
             ))}
-            {isStreaming &&
-              messages[messages.length - 1]?.role === 'assistant' &&
-              !messages[messages.length - 1]?.content && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex gap-3 px-2 py-0.5"
-                >
-                  <div className="w-8 h-8 rounded-full bg-aurora-glow border border-aurora/25 flex items-center justify-center flex-shrink-0 mt-1">
-                    <Sparkles className="w-4 h-4 text-aurora-light" />
-                  </div>
-                  <div className="glass-card border border-aurora/12 rounded-2xl rounded-tl-sm px-4 py-3">
-                    <StreamingIndicator />
-                  </div>
-                </motion.div>
-              )}
+
           </div>
         )}
         {messages.length > 0 && (

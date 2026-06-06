@@ -142,7 +142,7 @@ LANGUAGE_NAMES = {
 
 def reasoner_node(state: AgentState) -> AgentState:
     step_count = state.get("step_count", 0)
-    step_budget = int(os.getenv("MAX_AGENT_STEPS", "8"))
+    step_budget = int(os.getenv("MAX_AGENT_STEPS", "4"))
     today_date = datetime.now().strftime("%Y-%m-%d")
     language = state.get("language", "en")
     lang_name = LANGUAGE_NAMES.get(language, "English")
@@ -157,7 +157,12 @@ def reasoner_node(state: AgentState) -> AgentState:
     )
 
     if language != "en":
-        astrologer_prompt += f"\nThe user prefers communication in {lang_name}. Please respond entirely in {lang_name}.\n"
+        astrologer_prompt += (
+            f"\nIMPORTANT: The user has selected {lang_name} as their language. "
+            f"You MUST respond entirely in {lang_name}. "
+            f"Do NOT write in English unless the user explicitly asks you to. "
+            f"Every sentence, greeting, reading, and insight must be in {lang_name}.\n"
+        )
 
     bd = state.get("birth_details")
     if bd:
@@ -176,7 +181,7 @@ def reasoner_node(state: AgentState) -> AgentState:
 
     messages = [SystemMessage(content=astrologer_prompt)] + state["messages"]
 
-    llm = _create_llm(model=REASONER_MODEL, temperature=0.7, max_tokens=2048, tags=["reasoner"])
+    llm = _create_llm(model=REASONER_MODEL, temperature=0.3, max_tokens=512, tags=["reasoner"])
 
     from .tools import (
         compute_birth_chart,

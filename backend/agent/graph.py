@@ -22,7 +22,7 @@ def should_continue(state: AgentState) -> str:
         return "respond"
     last_msg = messages[-1]
     has_tool_calls = hasattr(last_msg, "tool_calls") and bool(last_msg.tool_calls)
-    if has_tool_calls and step_count < 8:
+    if has_tool_calls and step_count < 4:
         return "tools"
     return "respond"
 
