@@ -1,6 +1,7 @@
 import type { DailyGuidance, CosmicEvent } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const _raw = import.meta.env.VITE_API_URL || '/api';
+const API_BASE = _raw.replace(/\/+$/, '');
 
 class ApiError extends Error {
   constructor(public status: number, message: string) {
