@@ -1,13 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useChatStore } from '../store/chatStore';
-import type { BirthChart } from '../types';
+import type { BirthChart, BirthDetails } from '../types';
 import { computeChart, getTransits } from '../lib/api';
 import { getCache, setCache } from '../lib/cache';
 
-const CHART_CACHE_PREFIX = 'chart_';
-const TRANSITS_CACHE_KEY = 'transits';
-
-function birthHash(bd: Record<string, unknown>): string {
+function birthHash(bd: BirthDetails): string {
   return `${bd.date}|${bd.time || '12:00'}|${bd.place}|${bd.lat ?? ''}|${bd.lon ?? ''}|${bd.timezone ?? ''}`;
 }
 
@@ -19,7 +16,7 @@ export function useChart() {
 
   const fetchChart = useCallback(async () => {
     if (!birthDetails?.date || !birthDetails?.place) return;
-    const hash = birthHash(birthDetails as Record<string, unknown>);
+    const hash = birthHash(birthDetails);
     const cached = getCache<BirthChart>(CHART_CACHE_PREFIX + hash);
     if (cached) {
       setChart(cached);

@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Navbar } from './Navbar';
 import { CosmicBackground } from './CosmicBackground';
+import { BackendStatusBanner } from './BackendStatusBanner';
 import { useTranslation } from '../i18n';
 
 export function Layout() {
@@ -13,6 +14,7 @@ export function Layout() {
       <CosmicBackground />
       <div className="relative z-10 flex flex-col min-h-dvh">
         <Navbar />
+        <BackendStatusBanner />
         <main className="flex-1">
           <motion.div
             key={location.pathname}
