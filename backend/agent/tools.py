@@ -9,7 +9,7 @@ from geopy.geocoders import Nominatim
 from langchain_core.tools import tool
 from timezonefinder import TimezoneFinder
 
-from ..rag.retriever import load_retriever
+from rag.retriever import load_retriever
 
 logger = logging.getLogger(__name__)
 

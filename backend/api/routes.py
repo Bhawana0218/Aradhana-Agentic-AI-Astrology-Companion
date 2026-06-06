@@ -9,9 +9,9 @@ from fastapi import APIRouter, HTTPException
 from langchain_core.messages import AIMessage, HumanMessage
 from sse_starlette.sse import EventSourceResponse
 
-from ..agent.graph import agent_graph
-from ..agent.tools import compute_birth_chart, geocode_place, get_daily_transits
-from .schemas import (
+from agent.graph import agent_graph
+from agent.tools import compute_birth_chart, geocode_place, get_daily_transits
+from api.schemas import (
     ChartRequest,
     ChartResponse,
     ChatRequest,
@@ -26,7 +26,7 @@ from .schemas import (
     TransitsRequest,
     TransitsResponse,
 )
-from ..db.crud import append_message, create_session, get_history
+from db.crud import append_message, create_session, get_history
 
 dotenv_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(dotenv_path)
