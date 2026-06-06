@@ -34,6 +34,23 @@ app.add_middleware(
 
 app.include_router(router, prefix="/api")
 
+
+@app.get("/", include_in_schema=False)
+async def root():
+    return {
+        "service": "Aradhana — Celestial AI Guide",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "health": "/api/health",
+        "frontend": "https://aradhana.vercel.app",  # placeholder
+    }
+
+
+@app.get("/robots.txt", include_in_schema=False)
+async def robots():
+    return {"User-agent": "*", "Disallow": "/"}
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
