@@ -328,6 +328,17 @@ const en: Record<string, string> = {
   'welcome.prompt4': "What is my life's purpose?",
   'welcome.prompt5': 'How will this transit affect me?',
   'welcome.prompt6': 'Tell me about my Nakshatra',
+  'welcomeScreen.title': 'Namaste, Seeker',
+  'welcomeScreen.subtitle': 'The light in me honors the light in you',
+  'welcomeScreen.hint': 'I am Aradhana — your celestial guide. Share your birth details or ask me anything about the cosmos.',
+  'welcomeScreen.getStarted': 'Begin Your Journey',
+  'welcomeScreen.promptChartTitle': 'What does my birth chart reveal?',
+  'welcomeScreen.promptTodayTitle': "What energy is today's Moon bringing?",
+  'welcomeScreen.promptSaturnTitle': 'Tell me about Saturn retrograde',
+  'welcomeScreen.promptVenusMarsTitle': 'How do Venus and Mars affect love?',
+  'welcomeScreen.promptMercuryTitle': "What's Mercury doing right now?",
+  'welcomeScreen.promptNorthNodeTitle': 'What is my North Node destiny?',
+  'welcomeScreen.disclaimer': 'Astrology is for self-reflection and guidance only. Always follow your own judgment.',
 
   // Tool Activity Badge
   'tool.geocode.name': 'Birth Location',
