@@ -4,6 +4,9 @@ import type { BirthChart, BirthDetails } from '../types';
 import { computeChart, getTransits } from '../lib/api';
 import { getCache, setCache } from '../lib/cache';
 
+const CHART_CACHE_PREFIX = 'chart_';
+const TRANSITS_CACHE_KEY = 'transits';
+
 function birthHash(bd: BirthDetails): string {
   return `${bd.date}|${bd.time || '12:00'}|${bd.place}|${bd.lat ?? ''}|${bd.lon ?? ''}|${bd.timezone ?? ''}`;
 }
