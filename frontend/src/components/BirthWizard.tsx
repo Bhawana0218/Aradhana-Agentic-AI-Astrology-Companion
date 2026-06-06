@@ -210,19 +210,18 @@ function PlaceStep({ onNext, onBack, defaultValues }: StepProps) {
   const { t } = useTranslation();
   const [place, setPlace] = useState(defaultValues?.place ?? '');
   const [touched, setTouched] = useState(false);
-  const [geoError, setGeoError] = useState<string | null>(null);
+  const [geoWarn, setGeoWarn] = useState<string | null>(null);
   const [geocoding, setGeocoding] = useState(false);
   const valid = place.trim().length >= 2 && !geocoding;
 
   const handleSubmit = useCallback(async () => {
     if (!valid) return;
     setGeocoding(true);
-    setGeoError(null);
+    setGeoWarn(null);
     try {
       const result = await geocodePlace(place.trim());
       if (result.error) {
-        setGeoError(result.error);
-        return;
+        setGeoWarn('Could not verify this location. You can still proceed.');
       }
       onNext({
         place: result.place ?? place.trim(),
@@ -231,7 +230,13 @@ function PlaceStep({ onNext, onBack, defaultValues }: StepProps) {
         timezone: result.timezone ?? '',
       });
     } catch {
-      setGeoError('Could not verify location. Please check the name and try again.');
+      setGeoWarn('Location verification unavailable. You can still proceed.');
+      onNext({
+        place: place.trim(),
+        lat: '',
+        lon: '',
+        timezone: '',
+      });
     } finally {
       setGeocoding(false);
     }
@@ -257,7 +262,7 @@ function PlaceStep({ onNext, onBack, defaultValues }: StepProps) {
         <input
           type="text"
           value={place}
-          onChange={(e) => { setPlace(e.target.value); setTouched(true); setGeoError(null); }}
+          onChange={(e) => { setPlace(e.target.value); setTouched(true); setGeoWarn(null); }}
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           placeholder={t('birthWizard.place.placeholder')}
           className="input-premium pl-10"
@@ -266,14 +271,14 @@ function PlaceStep({ onNext, onBack, defaultValues }: StepProps) {
         />
         {geocoding && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-aurora animate-spin" />}
       </div>
-      {touched && !valid && !geoError && (
+      {touched && !valid && !geoWarn && (
         <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-rose-cosmos/80">
           {t('birthWizard.place.error')}
         </motion.p>
       )}
-      {geoError && (
-        <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-rose-cosmos/80">
-          {geoError}
+      {geoWarn && (
+        <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-amber-400/80">
+          {geoWarn}
         </motion.p>
       )}
       <div className="flex gap-2">
